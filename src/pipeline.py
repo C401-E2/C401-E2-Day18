@@ -25,7 +25,7 @@ def build_pipeline():
     print("PRODUCTION RAG PIPELINE")
     print("=" * 60)
 
-    print("\n[1/3] Chunking documents...")
+    print("\n[1/4] Chunking documents...")
     docs = load_documents()
     all_chunks = []
     for doc in docs:
