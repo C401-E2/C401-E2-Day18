@@ -148,15 +148,23 @@ def enrich_chunks(
     return enriched
 
 
-if __name__ == "__main__":
+def _safe_text(value) -> str:
+    return str(value).encode("ascii", "ignore").decode("ascii")
+
+
+def main() -> None:
     sample = (
         "Nhan vien chinh thuc duoc nghi phep nam 12 ngay lam viec moi nam. "
         "So ngay nghi phep tang them 1 ngay cho moi 5 nam tham nien cong tac."
     )
 
     print("=== Enrichment Pipeline Demo ===\n")
-    print(f"Original: {sample}\n")
-    print(f"Summary: {summarize_chunk(sample)}\n")
-    print(f"HyQA questions: {generate_hypothesis_questions(sample)}\n")
-    print(f"Contextual: {contextual_prepend(sample, 'So tay nhan vien')}\n")
-    print(f"Auto metadata: {extract_metadata(sample)}")
+    print(f"Original: {_safe_text(sample)}\n")
+    print(f"Summary: {_safe_text(summarize_chunk(sample))}\n")
+    print(f"HyQA questions: {_safe_text(generate_hypothesis_questions(sample))}\n")
+    print(f"Contextual: {_safe_text(contextual_prepend(sample, 'So tay nhan vien'))}\n")
+    print(f"Auto metadata: {_safe_text(extract_metadata(sample))}")
+
+
+if __name__ == "__main__":
+    main()

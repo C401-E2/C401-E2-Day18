@@ -156,7 +156,11 @@ def save_report(results: dict, failures: list[dict], path: str = "ragas_report.j
     print(f"Report saved to {path}")
 
 
-if __name__ == "__main__":
+def main() -> None:
     test_set = load_test_set()
     print(f"Loaded {len(test_set)} test questions")
     print("Run pipeline.py first to generate answers, then call evaluate_ragas().")
+
+
+if __name__ == "__main__":
+    main()

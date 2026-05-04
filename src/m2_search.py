@@ -246,6 +246,10 @@ class HybridSearch:
         return reciprocal_rank_fusion([bm25_results, dense_results], top_k=top_k)
 
 
-if __name__ == "__main__":
+def main() -> None:
     print(f"Original:  Nhan vien duoc nghi phep nam")
     print(f"Segmented: {segment_vietnamese('Nhan vien duoc nghi phep nam')}")
+
+
+if __name__ == "__main__":
+    main()

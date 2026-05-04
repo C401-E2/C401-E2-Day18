@@ -281,9 +281,13 @@ def compare_strategies(documents: list[dict]) -> dict:
     return results
 
 
-if __name__ == "__main__":
+def main() -> None:
     docs = load_documents()
     print(f"Loaded {len(docs)} documents")
     results = compare_strategies(docs)
     for name, stats in results.items():
         print(f"  {name}: {stats}")
+
+
+if __name__ == "__main__":
+    main()
