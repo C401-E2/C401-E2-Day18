@@ -37,23 +37,59 @@ def load_documents(data_dir: str = DATA_DIR) -> list[dict]:
         for fp in sorted(glob.glob(os.path.join(data_dir, pattern))):
             text = ""
             if fp.lower().endswith(".pdf"):
-                try:
-                    from pypdf import PdfReader  # type: ignore
-                    reader = PdfReader(fp)
-                    text = "\n".join(page.extract_text() or "" for page in reader.pages)
-                except Exception:
-                    try:
-                        from PyPDF2 import PdfReader  # type: ignore
-                        reader = PdfReader(fp)
-                        text = "\n".join(page.extract_text() or "" for page in reader.pages)
-                    except Exception:
-                        text = ""
+                text = _extract_pdf_text(fp)
             else:
                 with open(fp, encoding="utf-8") as f:
                     text = f.read()
             if text.strip():
                 docs.append({"text": text, "metadata": {"source": os.path.basename(fp)}})
     return docs
+
+
+def _extract_pdf_text(fp: str) -> str:
+    """Extract text from PDF using local tooling only."""
+    try:
+        from pypdf import PdfReader  # type: ignore
+
+        reader = PdfReader(fp)
+        text = "\n".join(page.extract_text() or "" for page in reader.pages)
+        if text.strip():
+            return text
+    except Exception:
+        pass
+
+    # OCR fallback if the environment has the required local packages/tools.
+    try:
+        import tempfile
+        from pathlib import Path
+
+        try:
+            import fitz  # type: ignore
+        except Exception:
+            fitz = None
+
+        try:
+            import pytesseract  # type: ignore
+        except Exception:
+            pytesseract = None
+
+        if fitz is None or pytesseract is None:
+            return ""
+
+        doc = fitz.open(fp)
+        pages_text = []
+        for page in doc:
+            pix = page.get_pixmap(matrix=fitz.Matrix(2, 2), alpha=False)
+            with tempfile.TemporaryDirectory() as tmpdir:
+                img_path = Path(tmpdir) / "page.png"
+                pix.save(str(img_path))
+                from PIL import Image
+
+                img = Image.open(img_path)
+                pages_text.append(pytesseract.image_to_string(img, lang="vie+eng"))
+        return "\n".join(pages_text)
+    except Exception:
+        return ""
 
 
 def chunk_basic(text: str, chunk_size: int = 500, metadata: dict | None = None) -> list[Chunk]:
@@ -284,6 +320,8 @@ def compare_strategies(documents: list[dict]) -> dict:
 def main() -> None:
     docs = load_documents()
     print(f"Loaded {len(docs)} documents")
+    if not docs:
+        print("Warning: no extractable text found in data/. PDFs may be scanned images without OCR.")
     results = compare_strategies(docs)
     for name, stats in results.items():
         print(f"  {name}: {stats}")

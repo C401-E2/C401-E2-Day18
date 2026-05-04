@@ -17,20 +17,20 @@
 
 | Metric | Naive | Production | Delta |
 |--------|-------|-----------|-------|
-| Faithfulness | 0.4000 | 0.4000 | +0.0000 |
-| Answer Relevancy | 0.0000 | 0.0000 | +0.0000 |
-| Context Precision | 0.0000 | 0.0000 | +0.0000 |
-| Context Recall | 0.1667 | 0.0000 | -0.1667 |
+| Faithfulness | 0.7393 | 0.6409 | -0.0984 |
+| Answer Relevancy | 0.0069 | 0.0382 | +0.0313 |
+| Context Precision | 0.0083 | 0.0262 | +0.0179 |
+| Context Recall | 0.0157 | 0.0280 | +0.0123 |
 
 ## Key Findings
 
 1. **Biggest improvement:** The pipeline now runs end-to-end with clean module boundaries, report generation, and fallback-safe execution.
-2. **Biggest challenge:** The provided corpus and test set are too small for the retrieval stack to show meaningful lift.
-3. **Surprise finding:** The evaluation bottleneck is not the reranker alone; the main issue is weak context quality and weak answer generation.
+2. **Biggest challenge:** The retrieved chunks are still too coarse, so exact policy clauses get diluted.
+3. **Surprise finding:** The production pipeline improved retrieval metrics over baseline, but faithfulness still dropped because generation remains heuristic.
 
 ## Presentation Notes
 
-1. RAGAS scores (naive vs production): production currently matches baseline on faithfulness and answer relevancy, but does not improve retrieval quality on this tiny demo set.
-2. Biggest win - module nào, tại sao: M3 is the most visible improvement point conceptually, but the current corpus prevents it from showing a real gain.
-3. Case study - 1 failure, Error Tree walkthrough: the only test question has noisy wording and no useful corpus support, so the error starts at query/context alignment.
-4. Next optimization nếu có thêm 1 giờ: replace the answer fallback with an actual LLM call, then evaluate on a larger Vietnamese corpus.
+1. RAGAS scores (naive vs production): retrieval-oriented metrics improved, but faithfulness fell because the answer step is still not a real generator.
+2. Biggest win - module nào, tại sao: M2 and M3 together gave the clearest gain on answer relevancy, context precision, and context recall.
+3. Case study - 1 failure, Error Tree walkthrough: the leave-without-pay question still misses the exact clause because chunking and ranking are not clause-aware enough.
+4. Next optimization nếu có thêm 1 giờ: make chunking more section-aware and add a real generation step for faithful answers.
