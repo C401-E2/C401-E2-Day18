@@ -1,5 +1,7 @@
 """Tests for Module 2: Hybrid Search."""
-import sys, os
+import os
+import sys
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from src.m2_search import segment_vietnamese, BM25Search, reciprocal_rank_fusion, SearchResult
 
@@ -37,3 +39,34 @@ def test_rrf_method():
     merged = reciprocal_rank_fusion([a, b], top_k=1)
     if merged:
         assert merged[0].method == "hybrid"
+
+
+def main() -> int:
+    """Allow running this test file directly with `python tests/test_m2.py`."""
+    try:
+        import pytest
+
+        return pytest.main([__file__])
+    except ImportError:
+        current_module = sys.modules[__name__]
+        test_functions = [
+            getattr(current_module, name)
+            for name in sorted(dir(current_module))
+            if name.startswith("test_") and callable(getattr(current_module, name))
+        ]
+
+        failures = 0
+        for test_func in test_functions:
+            try:
+                test_func()
+                print(f"PASS: {test_func.__name__}")
+            except Exception as exc:
+                failures += 1
+                print(f"FAIL: {test_func.__name__}: {exc}")
+
+        print(f"\nRan {len(test_functions)} tests, {failures} failed.")
+        return 1 if failures else 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
