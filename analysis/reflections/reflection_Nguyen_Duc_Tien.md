@@ -1,6 +1,6 @@
 # Individual Reflection - Lab 18
 
-**Tên:** Tiến  
+**Tên:** Nguyễn Đức Tiến  
 **MSHV:** 2A202600393
 **Module phụ trách:** M4 - RAGAS Evaluation
 
