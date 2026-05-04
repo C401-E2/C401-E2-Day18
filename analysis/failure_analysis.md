@@ -12,7 +12,7 @@
 | Faithfulness | 0.9600 | 0.8875 | -0.073 |
 | Answer Relevancy | 0.7969 | 0.8449 | +0.048 |
 | Context Precision | 0.7583 | 0.8804 | +0.122 |
-| Context Recall | 0.8000 | 0.7500 | -0.50 |
+| Context Recall | 0.8000 | 0.7500 | -0.05 |
 
 ---
 
