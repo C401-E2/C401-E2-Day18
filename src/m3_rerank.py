@@ -1,4 +1,4 @@
-"""Module 3: Reranking - Cross-encoder top-20 -> top-3 + latency benchmark."""
+"""Module 3: Reranking - Cross-encoder toop-20 -> top-3 + latency benchmark."""
 
 import os
 import re

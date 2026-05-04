@@ -28,9 +28,9 @@
 
 ## 5. Tự đánh giá
 
-| Tiêu chí | Tự chấm (1-5) |
-|----------|---------------|
-| Hiểu bài giảng | 4 |
-| Code quality | 4 |
-| Teamwork | 5 |
-| Problem solving | 4 |
+| Tiêu chí | Tự chấm (1-5)  |
+|----------|----------------|
+| Hiểu bài giảng | 4              |
+| Code quality | 4              |
+| Teamwork | 5              |
+| Problem solving | 4              |
