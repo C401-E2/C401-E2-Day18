@@ -32,7 +32,7 @@ def main():
 
     for f in ["ragas_report.json", "naive_baseline_report.json"]:
         if os.path.exists(f):
-            os.rename(f, f"reports/{f}")
+            os.replace(f, f"reports/{f}")
 
     print("\nSTEP 3: Comparison")
     print("-" * 40)

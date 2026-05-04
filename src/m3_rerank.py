@@ -127,7 +127,7 @@ def benchmark_reranker(reranker, query: str, documents: list[dict], n_runs: int 
     }
 
 
-if __name__ == "__main__":
+def main() -> None:
     query = "Nhan vien duoc nghi phep bao nhieu ngay?"
     docs = [
         {"text": "Nhan vien duoc nghi 12 ngay/nam.", "score": 0.8, "metadata": {}},
@@ -137,3 +137,7 @@ if __name__ == "__main__":
     reranker = CrossEncoderReranker()
     for r in reranker.rerank(query, docs):
         print(f"[{r.rank}] {r.rerank_score:.4f} | {r.text}")
+
+
+if __name__ == "__main__":
+    main()
