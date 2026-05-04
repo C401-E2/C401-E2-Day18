@@ -1,3 +1,22 @@
 [
-  {"question": "hihi cả nhà tự tạo testset bằng cơm nhé", "ground_truth": "Không kịp tạo luôn"},
+  {
+    "question": "Nhan vien chinh thuc duoc nghi phep nam bao nhieu ngay moi nam?",
+    "ground_truth": "Nhan vien chinh thuc duoc nghi phep nam 12 ngay lam viec moi nam."
+  },
+  {
+    "question": "So ngay nghi phep co tang them theo tham nien khong?",
+    "ground_truth": "So ngay nghi phep tang them 1 ngay cho moi 5 nam tham nien cong tac."
+  },
+  {
+    "question": "Nhan vien co the xin nghi phep khong luong toi da bao nhieu ngay mot nam?",
+    "ground_truth": "Nhan vien co the xin nghi phep khong luong toi da 30 ngay moi nam."
+  },
+  {
+    "question": "Don xin nghi phep can ai phe duyet?",
+    "ground_truth": "Don xin nghi phai duoc Giam doc bo phan phe duyet."
+  },
+  {
+    "question": "Ho so nghi om can nop giay xac nhan trong bao lau?",
+    "ground_truth": "Can nop giay xac nhan y te trong vong 3 ngay lam viec."
+  }
 ]
