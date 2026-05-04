@@ -252,4 +252,5 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    print(f"Original:  Nhan vien duoc nghi phep nam")
+    print(f"Segmented: {segment_vietnamese('Nhan vien duoc nghi phep nam')}")

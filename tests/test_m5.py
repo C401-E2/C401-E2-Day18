@@ -1,5 +1,7 @@
 """Tests for Module 5: Enrichment Pipeline."""
-import sys, os
+import os
+import sys
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from src.m5_enrichment import (
     summarize_chunk, generate_hypothesis_questions,
@@ -67,3 +69,34 @@ def test_enrich_preserves_original():
     result = enrich_chunks(CHUNKS, methods=["contextual"])
     if result:
         assert result[0].original_text == SAMPLE
+
+
+def main() -> int:
+    """Allow running this test file directly with `python tests/test_m5.py`."""
+    try:
+        import pytest
+
+        return pytest.main([__file__])
+    except ImportError:
+        current_module = sys.modules[__name__]
+        test_functions = [
+            getattr(current_module, name)
+            for name in sorted(dir(current_module))
+            if name.startswith("test_") and callable(getattr(current_module, name))
+        ]
+
+        failures = 0
+        for test_func in test_functions:
+            try:
+                test_func()
+                print(f"PASS: {test_func.__name__}")
+            except Exception as exc:
+                failures += 1
+                print(f"FAIL: {test_func.__name__}: {exc}")
+
+        print(f"\nRan {len(test_functions)} tests, {failures} failed.")
+        return 1 if failures else 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
