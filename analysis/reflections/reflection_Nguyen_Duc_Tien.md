@@ -1,6 +1,7 @@
 # Individual Reflection - Lab 18
 
 **Tên:** Tiến  
+**MSHV:** 2A202600393
 **Module phụ trách:** M4 - RAGAS Evaluation
 
 ## 1. Đóng góp kỹ thuật
