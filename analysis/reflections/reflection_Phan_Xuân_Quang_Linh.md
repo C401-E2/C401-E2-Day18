@@ -1,6 +1,6 @@
 # Individual Reflection - Lab 18
 
-**Tên:** Linh  
+**Tên:** Phan Xuân Quang Linh
 **Module phụ trách:** M2
 
 ## 1. Đóng góp kỹ thuật
