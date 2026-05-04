@@ -7,64 +7,64 @@
 
 | Metric | Naive Baseline | Production | Delta |
 |--------|----------------|------------|-------|
-| Faithfulness | 0.4000 | 0.4000 | +0.0000 |
-| Answer Relevancy | 0.0000 | 0.0000 | +0.0000 |
-| Context Precision | 0.0000 | 0.0000 | +0.0000 |
-| Context Recall | 0.1667 | 0.0000 | -0.1667 |
+| Faithfulness | 0.7393 | 0.6409 | -0.0984 |
+| Answer Relevancy | 0.0069 | 0.0382 | +0.0313 |
+| Context Precision | 0.0083 | 0.0262 | +0.0179 |
+| Context Recall | 0.0157 | 0.0280 | +0.0123 |
 
 ## Bottom-5 Failures
 
 ### #1
-- **Question:** hihi cả nhà tự tạo testset bằng cờm nhé
-- **Expected:** Answer should stay semantically close to the question and be grounded in context.
-- **Got:** Output drifted away from the question; answer relevancy is 0.0.
-- **Worst metric:** answer_relevancy
-- **Error Tree:** Output sai -> Context đúng? -> Query OK? -> Root cause: generation fallback is too weak and the query has no useful lexical overlap with retrieved text.
-- **Suggested fix:** Replace the extractive fallback in `pipeline.py` with a constrained LLM prompt, and add query normalization before search.
+- **Question:** Nhan vien chinh thuc duoc nghi phep nam bao nhieu ngay moi nam?
+- **Expected:** Retrieve the policy sentence about annual leave.
+- **Got:** Retrieved context did not surface the exact policy sentence strongly enough.
+- **Worst metric:** context_recall
+- **Error Tree:** Output sai -> Context đúng? -> Query OK? -> Root cause: the retrieval stack still misses some direct policy spans.
+- **Suggested fix:** Improve chunking granularity and tighten BM25 + reranking on policy clauses.
 
 ### #2
-- **Question:** hihi cả nhà tự tạo testset bằng cờm nhé
-- **Expected:** Relevant context should be retrieved from the corpus.
-- **Got:** Context recall is 0.0 in production.
+- **Question:** So ngay nghi phep co tang them theo tham nien khong?
+- **Expected:** Retrieve the thâm niên rule correctly.
+- **Got:** Context was relevant but not ranked high enough.
 - **Worst metric:** context_recall
-- **Error Tree:** Output sai -> Context đúng? -> Query OK? -> Root cause: the demo corpus and the evaluation question are too mismatched.
-- **Suggested fix:** Add a real Vietnamese corpus and rerun evaluation on a meaningful test set.
+- **Error Tree:** Output sai -> Context đúng? -> Query OK? -> Root cause: chunking and retrieval are not preserving the exact clause.
+- **Suggested fix:** Use structure-aware chunking plus better query expansion.
 
 ### #3
-- **Question:** hihi cả nhà tự tạo testset bằng cờm nhé
-- **Expected:** Retrieval should surface useful policy text or related content.
-- **Got:** Context precision stayed at 0.0.
+- **Question:** Nhan vien co the xin nghi phep khong luong toi da bao nhieu ngay mot nam?
+- **Expected:** Context precision should be high for the leave-without-pay clause.
+- **Got:** Retrieved chunks were still noisy.
 - **Worst metric:** context_precision
-- **Error Tree:** Output sai -> Context đúng? -> Query OK? -> Root cause: retrieval ranking is not calibrated for this dataset.
-- **Suggested fix:** Tune BM25/dense fusion and use a stronger reranker.
+- **Error Tree:** Output sai -> Context đúng? -> Query OK? -> Root cause: the index contains too many long chunks and the relevant clause is diluted.
+- **Suggested fix:** Split legal/policy sections more aggressively and add metadata filters.
 
 ### #4
-- **Question:** hihi cả nhà tự tạo testset bằng cờm nhé
-- **Expected:** Faithful answer grounded in retrieved context.
-- **Got:** Faithfulness stayed at baseline level because generation is still heuristic.
-- **Worst metric:** faithfulness
-- **Error Tree:** Output sai -> Context đúng? -> Query OK? -> Root cause: answer generation is a fallback, not an LLM completion.
-- **Suggested fix:** Switch to a controlled generation prompt and pass the top contexts directly to an LLM.
+- **Question:** Don xin nghi phep can ai phe duyet?
+- **Expected:** Answer should identify the approving manager.
+- **Got:** The approval clause was not retrieved cleanly.
+- **Worst metric:** context_precision
+- **Error Tree:** Output sai -> Context đúng? -> Query OK? -> Root cause: ranking favors broader chunks over a precise approval clause.
+- **Suggested fix:** Add clause-level chunking and rerank using exact-match signals.
 
 ### #5
-- **Question:** hihi cả nhà tự tạo testset bằng cờm nhé
-- **Expected:** Production pipeline should improve retrieval quality over baseline.
-- **Got:** The current corpus is too small to show a measurable lift.
+- **Question:** Ho so nghi om can nop giay xac nhan trong bao lau?
+- **Expected:** Retrieve the medical certificate deadline.
+- **Got:** The retrieved context only partially matched the time constraint.
 - **Worst metric:** context_precision
-- **Error Tree:** Output sai -> Context đúng? -> Query OK? -> Root cause: insufficient indexed data.
-- **Suggested fix:** Use a larger corpus and more than one evaluation question.
+- **Error Tree:** Output sai -> Context đúng? -> Query OK? -> Root cause: overlapping chunks still mix unrelated policy text.
+- **Suggested fix:** Preserve section boundaries better during chunking and improve rerank scoring.
 
 ## Case Study (presentation)
 
-**Question:** hihi cả nhà tự tạo testset bằng cờm nhé
+**Question:** Nhan vien co the xin nghi phep khong luong toi da bao nhieu ngay mot nam?
 
 **Error Tree walkthrough:**
-1. Output đúng? -> No.
-2. Context đúng? -> No.
-3. Query rewrite OK? -> No, the query is noisy and not aligned with the corpus.
-4. Fix ở bước: improve query normalization, add real generation, and evaluate on a meaningful corpus.
+1. Output đúng? -> Partially, but the answer is not grounded enough.
+2. Context đúng? -> Partially, the right policy exists but is not ranked first.
+3. Query rewrite OK? -> Yes, the query is clean enough.
+4. Fix ở bước: improve chunk boundaries and reranking around the policy section.
 
 **Nếu có thêm 1 giờ:**
-- Replace the answer fallback with a real constrained LLM response.
-- Add a larger Vietnamese corpus and a cleaner test set.
-- Tune hybrid search weights and reranker thresholds against actual failures.
+- Tighten structure-aware chunking for policy docs.
+- Add metadata-based filters on section titles.
+- Retune BM25 and reranker weighting for exact policy clauses.
